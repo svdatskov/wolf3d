@@ -18,6 +18,8 @@ typedef struct s_param {
 }				t_param;
 
 void	ft_error(int error);
-t_param	ft_validation(t_param param);
+void	ft_validation(t_param *param);
+t_param 	*ft_initial(void);
+void ft_readmap(t_param *param);
 
 #endif

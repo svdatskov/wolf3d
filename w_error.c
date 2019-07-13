@@ -17,4 +17,9 @@ void ft_error(int error)
 		ft_putendl("Validation ERROR!");
 		exit(3);
 	}
+	if (error == 4)
+	{
+		ft_putendl("Memory allocation ERROR!");
+		exit(4);
+	}
 }
