@@ -10,7 +10,7 @@ file(GLOB SOURCES
         *.c)
 set(GCC_COVERAGE_COMPILE_FLAGS "-Wall -Wextra -Werror")
 
-add_executable(wolf3d ${SOURCES} w_error.c w_validation.c w_initial.c w_readmap.c)
+add_executable(wolf3d ${SOURCES} w_error.c w_validation.c w_initial.c w_readmap.c w_printmap.c)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}" )
 set(CMAKE_CXX_STANDARD 14)

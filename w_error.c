@@ -22,4 +22,9 @@ void ft_error(int error)
 		ft_putendl("Memory allocation ERROR!");
 		exit(4);
 	}
+	if (error == 5)
+	{
+		ft_putendl("SDL2 ERROR!");
+		exit(5);
+	}
 }

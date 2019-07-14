@@ -10,6 +10,7 @@ int main(int argc, char **argv)
 		param->name = argv[1];
 		ft_validation(param);
 		ft_readmap(param);
+		ft_printmap(param);
 	}
 	else
 		ft_error(1);
