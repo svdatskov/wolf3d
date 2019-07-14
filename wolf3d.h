@@ -3,7 +3,7 @@
 
 #include <stdlib.h>
 #include "libft/libft.h"
-#include "SDL2/SDL.h"
+//#include "SDL2/SDL.h"
 
 #define WIDTH 1920
 #define HEIGHT 1080
