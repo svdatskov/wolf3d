@@ -9,9 +9,12 @@ static t_param *first_stage(int fd, t_param *param)
 	{
 		param->width = 0;
 		while (param->line[param->width]) {
-			param->width++;
-			if (param->line[param->width] == 'x')
+			if (param->line[param->width] == 'x') {
 				player++;
+				param->print->posX = param->width;
+				param->print->posY = param->height;
+			}
+			param->width++;
 		}
 		if (param->height == 0)
 			param->base_width = param->width;
