@@ -1,20 +1,20 @@
 #include "wolf3d.h"
 
-static void verLine(int x, int drawStart, int drawEnd, int color, t_param *param)
+static void verLine(int x, int dr_s, int dr_e, int color, t_param *param)
 {
 	int y = 0;
-	while (y < drawStart)
+	while (y < dr_s)
 	{
 		param->data_img[y * WIDTH + x] = 0;
 		y++;
 	}
-	y = drawStart;
-	while (y <= drawEnd)
+	y = dr_s;
+	while (y <= dr_e)
 	{
 		param->data_img[y * WIDTH + x] = color;
 		y++;
 	}
-	y = drawEnd + 1;
+	y = dr_e + 1;
 	while (y < HEIGHT)
 	{
 		param->data_img[y * WIDTH + x] = 0;
@@ -22,65 +22,72 @@ static void verLine(int x, int drawStart, int drawEnd, int color, t_param *param
 	}
 }
 
+static void conditions(t_param *p)
+{
+    if (p->pr->ray_x < 0)
+    {
+        p->pr->st_x = -1;
+        p->pr->sd_x = (p->pr->p_x - p->pr->mapX) * p->pr->dlt_x;
+    }
+    else
+    {
+        p->pr->st_x = 1;
+        p->pr->sd_x = (p->pr->mapX + 1.0 - p->pr->p_x) * p->pr->dlt_x;
+    }
+    if (p->pr->ray_y < 0)
+    {
+        p->pr->st_y = -1;
+        p->pr->sd_y = (p->pr->p_y - p->pr->mapY) * p->pr->dlt_y;
+    }
+    else
+    {
+        p->pr->st_y = 1;
+        p->pr->sd_y = (p->pr->mapY + 1.0 - p->pr->p_y) * p->pr->dlt_y;
+    }
+}
 
-void	ft_printmap(t_param *param)
+void	ft_printmap(t_param *p)
 {
 	int x = 0;
-		while(SDL_PollEvent(&param->event)) {
-			if ((param->event.type == SDL_QUIT) ||
-				(param->event.type == SDL_KEYDOWN && param->event.key.keysym.scancode == SDL_SCANCODE_ESCAPE))
-				param->running = 0;
+		while(SDL_PollEvent(&p->event)) {
 			while (x < (double)WIDTH) {
-				param->print->cameraX = 1 - 2.0 * x / (double) WIDTH;
-				param->print->rayDirX = param->print->dirX + param->print->planeX * param->print->cameraX;
-				param->print->rayDirY = param->print->dirY + param->print->planeY * param->print->cameraX;
-				param->print->mapX = (int)param->print->posX;
-				param->print->mapY = (int)param->print->posY;
-				param->print->deltaDistX = fabs(1 / param->print->rayDirX);
-				param->print->deltaDistY = fabs(1 / param->print->rayDirY);
-				param->print->hit = 0;
-				if (param->print->rayDirX < 0) {
-					param->print->stepX = -1;
-					param->print->sideDistX = (param->print->posX - param->print->mapX) * param->print->deltaDistX;
-				} else {
-					param->print->stepX = 1;
-					param->print->sideDistX = (param->print->mapX + 1.0 - param->print->posX) * param->print->deltaDistX;
-				}
-				if (param->print->rayDirY < 0) {
-					param->print->stepY = -1;
-					param->print->sideDistY = (param->print->posY - param->print->mapY) * param->print->deltaDistY;
-				} else {
-					param->print->stepY = 1;
-					param->print->sideDistY = (param->print->mapY + 1.0 - param->print->posY) * param->print->deltaDistY;
-				}
-				while (param->print->hit == 0) {
-					if (param->print->sideDistX < param->print->sideDistY) {
-						param->print->sideDistX += param->print->deltaDistX;
-						param->print->mapX += param->print->stepX;
-						param->print->side = 0;
+				p->pr->cam_x = 1 - 2.0 * x / (double) WIDTH;
+				p->pr->ray_x = p->pr->d_x + p->pr->pl_x * p->pr->cam_x;
+				p->pr->ray_y = p->pr->d_y + p->pr->pl_y * p->pr->cam_x;
+				p->pr->mapX = (int)p->pr->p_x;
+				p->pr->mapY = (int)p->pr->p_y;
+				p->pr->dlt_x = fabs(1 / p->pr->ray_x);
+				p->pr->dlt_y = fabs(1 / p->pr->ray_y);
+				p->pr->hit = 0;
+				conditions(p);
+				while (p->pr->hit == 0) {
+					if (p->pr->sd_x < p->pr->sd_y) {
+						p->pr->sd_x += p->pr->dlt_x;
+						p->pr->mapX += p->pr->st_x;
+						p->pr->side = 0;
 					} else {
-						param->print->sideDistY += param->print->deltaDistY;
-						param->print->mapY += param->print->stepY;
-						param->print->side = 1;
+						p->pr->sd_y += p->pr->dlt_y;
+						p->pr->mapY += p->pr->st_y;
+						p->pr->side = 1;
 					}
-					if (param->map[param->print->mapY][param->print->mapX] == '1')
-						param->print->hit = 1;
+					if (p->map[p->pr->mapY][p->pr->mapX] == '1')
+						p->pr->hit = 1;
 				}
-				if (param->print->side == 0)
-					param->print->perpWallDist = (param->print->mapX - param-> print->posX + (1 - param->print->stepX) / 2) / param->print->rayDirX;
+				if (p->pr->side == 0)
+					p->pr->pwd = (p->pr->mapX - p-> pr->p_x + (1 - p->pr->st_x) / 2) / p->pr->ray_x;
 				else
-					param->print->perpWallDist = (param->print->mapY - param->print->posY + (1 - param->print->stepY) / 2) / param->print->rayDirY;
+					p->pr->pwd = (p->pr->mapY - p->pr->p_y + (1 - p->pr->st_y) / 2) / p->pr->ray_y;
 
-				param->print->lineHeight = (int) (HEIGHT / param->print->perpWallDist);
+				p->pr->lineHeight = (int) (HEIGHT / p->pr->pwd);
 
-				param->print->drawStart = -param->print->lineHeight / 2 + HEIGHT / 2;
-				if (param->print->drawStart < 0)
-					param->print->drawStart = 0;
-				param->print->drawEnd = param->print->lineHeight / 2 + HEIGHT / 2;
-				if (param->print->drawEnd >= HEIGHT)
-					param->print->drawEnd = HEIGHT - 1;
+				p->pr->drS = -p->pr->lineHeight / 2 + HEIGHT / 2;
+				if (p->pr->drS < 0)
+					p->pr->drS = 0;
+				p->pr->drE = p->pr->lineHeight / 2 + HEIGHT / 2;
+				if (p->pr->drE >= HEIGHT)
+					p->pr->drE = HEIGHT - 1;
 				int color = 0x00FF00;
-//				switch(param->map[mapX][mapY])
+//				switch(p->map[mapX][mapY])
 //				{
 //					case 1:  color = 0xff0000;  break; //red
 //					case 2:  color = 0x00ff00;  break; //green
@@ -89,11 +96,11 @@ void	ft_printmap(t_param *param)
 //					default: color = 0xff8000; break; //yellow
 //				}
 
-				if (param->print->side == 1) { color = color / 2; }
+				if (p->pr->side == 1) { color = color / 2; }
 
-				verLine(x, param->print->drawStart, param->print->drawEnd, color, param);
+				verLine(x, p->pr->drS, p->pr->drE, color, p);
 				x++;
 			}
-	SDL_UpdateWindowSurface(param->window);
+	SDL_UpdateWindowSurface(p->window);
 		}
 }

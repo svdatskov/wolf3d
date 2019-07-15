@@ -11,8 +11,8 @@ static t_param *first_stage(int fd, t_param *param)
 		while (param->line[param->width]) {
 			if (param->line[param->width] == 'x') {
 				player++;
-				param->print->posX = param->width;
-				param->print->posY = param->height;
+				param->pr->p_x = param->width;
+				param->pr->p_y = param->height;
 			}
 			param->width++;
 		}
@@ -21,6 +21,7 @@ static t_param *first_stage(int fd, t_param *param)
 		else if (param->width != param->base_width)
 			ft_error(3);
 		param->height++;
+		free(param->line);
 	}
 	if (player != 1)
 		ft_error(3);
@@ -54,6 +55,7 @@ static void second_stage(int fd, t_param *param)
 		}
 		height++;
 		width = 0;
+		free(param->line);
 	}
 //	free(param->line);
 	close(fd);

@@ -13,6 +13,7 @@ void ft_readmap(t_param *param)
 	{
 		param->map[cnt] = (char *)malloc(sizeof(char) * (param->width + 1));
 		ft_strcpy(param->map[cnt], param->line);
+		free(param->line);
 		cnt++;
 	}
 }
