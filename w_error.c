@@ -4,7 +4,7 @@ void ft_error(int error)
 {
 	if (error == 1)
 	{
-		ft_putendl("Usage: ./wolf3d [map]");
+		ft_putendl("Usage: ./wolf3d [map.wolf]");
 		exit(1);
 	}
 	if (error == 2)

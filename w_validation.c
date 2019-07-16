@@ -60,9 +60,17 @@ void	ft_validation(t_param *param)
 	int fd;
 	int width;
 	int height;
+	char **str;
 
 	width = 0;
 	height = 0;
+	str = ft_strsplit(param->name, '.');
+	if (str[1] == NULL)
+		ft_error(1);
+	else {
+		if (ft_strcmp(str[1], "wolf") != 0)
+			ft_error(1);
+	}
 	if ((fd = open(param->name, O_RDONLY)) < 1)
 		ft_error(2);
 	param->width = 0;

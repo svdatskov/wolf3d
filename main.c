@@ -36,6 +36,7 @@ int main(int argc, char **argv)
 			}
 			ft_exit(param);
 		}
+		printf("%i\n %i\n", param->width, param->height);
 	}
 	else
 		ft_error(1);

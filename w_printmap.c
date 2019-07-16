@@ -5,7 +5,7 @@ static void verLine(int x, int dr_s, int dr_e, int color, t_param *param)
 	int y = 0;
 	while (y < dr_s)
 	{
-		param->data_img[y * WIDTH + x] = 0;
+		param->data_img[y * WIDTH + x] = 0xe5e5ff;
 		y++;
 	}
 	y = dr_s;
@@ -17,7 +17,7 @@ static void verLine(int x, int dr_s, int dr_e, int color, t_param *param)
 	y = dr_e + 1;
 	while (y < HEIGHT)
 	{
-		param->data_img[y * WIDTH + x] = 0;
+		param->data_img[y * WIDTH + x] = 0x696969;
 		y++;
 	}
 }
@@ -63,7 +63,7 @@ static void conditions2(t_param *p)
             p->pr->side = 1;
         }
         if (p->map[p->pr->mapY][p->pr->mapX] == '1')
-            p->pr->hit = 1;
+			p->pr->hit = 1;
     }
     if (p->pr->side == 0)
         p->pr->pwd = (p->pr->mapX - p-> pr->p_x + (1 - p->pr->st_x) / 2) / p->pr->ray_x;

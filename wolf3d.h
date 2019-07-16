@@ -4,10 +4,11 @@
 #include <stdlib.h>
 #include <math.h>
 #include "libft/libft.h"
-#include "SDL2.framework/Headers/SDL.h"
+#include "SDL2/SDL.h"
+#include "Frameworks/SDL2_image.framework/Headers/SDL_image.h"
 
-#define WIDTH	1200
-#define HEIGHT	900
+#define WIDTH	1920
+#define HEIGHT	1080
 
 typedef struct		s_print {
 	double 			p_x;
