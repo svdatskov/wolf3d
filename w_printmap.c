@@ -46,41 +46,53 @@ static void conditions(t_param *p)
     }
 }
 
+static void conditions2(t_param *p)
+{
+    while (p->pr->hit == 0)
+    {
+        if (p->pr->sd_x < p->pr->sd_y)
+        {
+            p->pr->sd_x += p->pr->dlt_x;
+            p->pr->mapX += p->pr->st_x;
+            p->pr->side = 0;
+        }
+        else
+        {
+            p->pr->sd_y += p->pr->dlt_y;
+            p->pr->mapY += p->pr->st_y;
+            p->pr->side = 1;
+        }
+        if (p->map[p->pr->mapY][p->pr->mapX] == '1')
+            p->pr->hit = 1;
+    }
+    if (p->pr->side == 0)
+        p->pr->pwd = (p->pr->mapX - p-> pr->p_x + (1 - p->pr->st_x) / 2) / p->pr->ray_x;
+    else
+        p->pr->pwd = (p->pr->mapY - p->pr->p_y + (1 - p->pr->st_y) / 2) / p->pr->ray_y;
+    p->pr->lineHeight = (int) (HEIGHT / p->pr->pwd);
+    p->pr->drS = -p->pr->lineHeight / 2 + HEIGHT / 2;
+}
+
+static void conditions3(t_param *p, int x)
+{
+    p->pr->cam_x = 1 - 2.0 * x / (double) WIDTH;
+    p->pr->ray_x = p->pr->d_x + p->pr->pl_x * p->pr->cam_x;
+    p->pr->ray_y = p->pr->d_y + p->pr->pl_y * p->pr->cam_x;
+    p->pr->mapX = (int)p->pr->p_x;
+    p->pr->mapY = (int)p->pr->p_y;
+    p->pr->dlt_x = fabs(1 / p->pr->ray_x);
+    p->pr->dlt_y = fabs(1 / p->pr->ray_y);
+    p->pr->hit = 0;
+}
+
 void	ft_printmap(t_param *p)
 {
 	int x = 0;
 		while(SDL_PollEvent(&p->event)) {
 			while (x < (double)WIDTH) {
-				p->pr->cam_x = 1 - 2.0 * x / (double) WIDTH;
-				p->pr->ray_x = p->pr->d_x + p->pr->pl_x * p->pr->cam_x;
-				p->pr->ray_y = p->pr->d_y + p->pr->pl_y * p->pr->cam_x;
-				p->pr->mapX = (int)p->pr->p_x;
-				p->pr->mapY = (int)p->pr->p_y;
-				p->pr->dlt_x = fabs(1 / p->pr->ray_x);
-				p->pr->dlt_y = fabs(1 / p->pr->ray_y);
-				p->pr->hit = 0;
+				conditions3(p, x);
 				conditions(p);
-				while (p->pr->hit == 0) {
-					if (p->pr->sd_x < p->pr->sd_y) {
-						p->pr->sd_x += p->pr->dlt_x;
-						p->pr->mapX += p->pr->st_x;
-						p->pr->side = 0;
-					} else {
-						p->pr->sd_y += p->pr->dlt_y;
-						p->pr->mapY += p->pr->st_y;
-						p->pr->side = 1;
-					}
-					if (p->map[p->pr->mapY][p->pr->mapX] == '1')
-						p->pr->hit = 1;
-				}
-				if (p->pr->side == 0)
-					p->pr->pwd = (p->pr->mapX - p-> pr->p_x + (1 - p->pr->st_x) / 2) / p->pr->ray_x;
-				else
-					p->pr->pwd = (p->pr->mapY - p->pr->p_y + (1 - p->pr->st_y) / 2) / p->pr->ray_y;
-
-				p->pr->lineHeight = (int) (HEIGHT / p->pr->pwd);
-
-				p->pr->drS = -p->pr->lineHeight / 2 + HEIGHT / 2;
+				conditions2(p);
 				if (p->pr->drS < 0)
 					p->pr->drS = 0;
 				p->pr->drE = p->pr->lineHeight / 2 + HEIGHT / 2;
@@ -95,7 +107,6 @@ void	ft_printmap(t_param *p)
 //					case 4:  color = 0xffffff;  break; //white
 //					default: color = 0xff8000; break; //yellow
 //				}
-
 				if (p->pr->side == 1) { color = color / 2; }
 
 				verLine(x, p->pr->drS, p->pr->drE, color, p);

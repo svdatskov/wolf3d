@@ -1,5 +1,21 @@
 #include "wolf3d.h"
 
+static void ft_exit(t_param *param)
+{
+    if ((param->event.type == SDL_QUIT) ||
+        (param->event.type == SDL_KEYDOWN && param->event.key.keysym.scancode == SDL_SCANCODE_ESCAPE))
+        param->running = 0;
+}
+
+static void ft_recalculate(t_param *param)
+{
+    param->time.old_time = param->time.time;
+    param->time.time = SDL_GetTicks();
+    param->time.fr_t = (param->time.time - param->time.old_time) / 1000.0;
+    param->time.mv_s = param->time.fr_t * 20.0;
+    param->time.ro_s = param->time.fr_t * 3.0;
+}
+
 
 int main(int argc, char **argv)
 {
@@ -13,19 +29,15 @@ int main(int argc, char **argv)
 		while (param->running)
 		{
 			ft_printmap(param);
-			param->time.old_time = param->time.time;
-			param->time.time = SDL_GetTicks();
-			param->time.fr_t = (param->time.time - param->time.old_time) / 1000.0;
-			param->time.mv_s = param->time.fr_t * 7.0;
-			param->time.ro_s = param->time.fr_t * 3.0;
+			ft_recalculate(param);
 			if (param->event.type == SDL_KEYDOWN) {
 				param->time = ft_hooks(param);
 				param->event.key.keysym.sym = 0;
 			}
+			ft_exit(param);
 		}
 	}
 	else
 		ft_error(1);
-	system("leaks -q wolf3d");
 	return (0);
 }

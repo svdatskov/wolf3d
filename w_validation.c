@@ -29,13 +29,8 @@ static t_param *first_stage(int fd, t_param *param)
 	return (param);
 }
 
-static void second_stage(int fd, t_param *param)
+static void second_stage(int fd, t_param *param, int width, int height)
 {
-	int width;
-	int height;
-
-	width = 0;
-	height = 0;
 	while (get_next_line(fd, &param->line) == 1)
 	{
 		while (param->line[width])
@@ -57,13 +52,17 @@ static void second_stage(int fd, t_param *param)
 		width = 0;
 		free(param->line);
 	}
-//	free(param->line);
 	close(fd);
 }
 
 void	ft_validation(t_param *param)
 {
 	int fd;
+	int width;
+	int height;
+
+	width = 0;
+	height = 0;
 	if ((fd = open(param->name, O_RDONLY)) < 1)
 		ft_error(2);
 	param->width = 0;
@@ -71,5 +70,5 @@ void	ft_validation(t_param *param)
 	param->base_width = 0;
 	param = first_stage(fd, param);
 	fd = open(param->name, O_RDONLY);
-	second_stage(fd, param);
+	second_stage(fd, param, width, height);
 }
