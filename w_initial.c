@@ -12,6 +12,7 @@ static void ft_main_initial(t_param *param)
 	param->flags.left = 0;
 	param->flags.up = 0;
 	param->flags.down = 0;
+	param->flags.speed = 0;
 }
 
 static void ft_print_initial(t_param *param)
@@ -29,7 +30,7 @@ static void ft_time_initial(t_param *param)
     param->time.old_time = param->time.time;
     param->time.time = SDL_GetTicks();
     param->time.fr_t = (param->time.time - param->time.old_time) / 1000.0;
-    param->time.mv_s = param->time.fr_t * 7.0;
+    param->time.mv_s = param->time.fr_t * 5.0;
     param->time.ro_s = param->time.fr_t * 3.0;
 }
 

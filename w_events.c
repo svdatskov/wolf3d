@@ -19,6 +19,10 @@ t_param		*ft_events(t_param *param)
 			param->flags.right = 1;
 		else if (param->event.type == SDL_KEYUP && param->event.key.keysym.sym == SDLK_RIGHT)
 			param->flags.right = 0;
+		else if (param->event.type == SDL_KEYDOWN && param->event.key.keysym.sym == SDLK_LSHIFT)
+			param->flags.speed = 1;
+		else if (param->event.type == SDL_KEYUP && param->event.key.keysym.sym == SDLK_LSHIFT)
+			param->flags.speed = 0;
 	}
 	return (param);
 }

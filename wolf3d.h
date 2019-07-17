@@ -53,7 +53,7 @@ typedef struct		s_flags {
 	int 			down;
 	int 			left;
 	int 			right;
-	double 			speed;
+	int 			speed;
 }					t_flags;
 
 typedef struct		s_param {
