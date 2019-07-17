@@ -7,8 +7,10 @@
 #include "SDL2/SDL.h"
 #include "Frameworks/SDL2_image.framework/Headers/SDL_image.h"
 
-#define WIDTH	1920
-#define HEIGHT	1080
+#define WIDTH		1920
+#define HEIGHT		1080
+#define T_WIDTH 	64
+#define T_HEIGHT 	64
 
 typedef struct		s_print {
 	double 			p_x;
@@ -46,9 +48,17 @@ typedef struct		s_time {
 	double 			ro_s;
 }					t_time;
 
+typedef struct		s_flags {
+	int 			up;
+	int 			down;
+	int 			left;
+	int 			right;
+}					t_flags;
+
 typedef struct		s_param {
 	SDL_Window		*window;
 	SDL_Surface		*surface;
+	SDL_Surface		**image;
 	SDL_Event		event;
 	int				width;
 	int				height;
@@ -58,6 +68,8 @@ typedef struct		s_param {
 	char			*line;
 	char			*name;
 	char			**map;
+	int 			*img;
+	struct s_flags  flags;
 	struct s_time 	time;
 	struct s_print  *pr;
 }					t_param;
@@ -68,5 +80,6 @@ void			ft_readmap(t_param *param);
 void			ft_printmap(t_param *p);
 t_time			ft_hooks(t_param *param);
 t_param			*ft_initial(void);
+t_param			*ft_events(t_param *param);
 
 #endif

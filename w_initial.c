@@ -8,6 +8,10 @@ static void ft_main_initial(t_param *param)
     param->name = NULL;
     param->map = NULL;
     param->running = 1;
+    param->flags.right = 0;
+	param->flags.left = 0;
+	param->flags.up = 0;
+	param->flags.down = 0;
 }
 
 static void ft_print_initial(t_param *param)
@@ -36,8 +40,18 @@ static void	ft_sdl_initial(t_param *param)
 			SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, SDL_WINDOW_ALLOW_HIGHDPI);
 	if (param->window == NULL)
 		exit (5);
+	param->image = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 8);
 	param->surface = SDL_GetWindowSurface(param->window);
 	param->data_img = param->surface->pixels;
+	param->image[0] = IMG_Load("../pics/eagle.png");
+	param->image[1] = IMG_Load("../pics/redbrick.png");
+	param->image[2] = IMG_Load("../pics/purplestone.png");
+	param->image[3] = IMG_Load("../pics/greystone.png");
+	param->image[4] = IMG_Load("../pics/bluestone.png");
+	param->image[5] = IMG_Load("../pics/mossy.png");
+	param->image[6] = IMG_Load("../pics/wood.png");
+	param->image[7] = IMG_Load("../pics/colorstone.png");
+	param->img = param->image[0]->pixels;
 }
 
 t_param 	*ft_initial(void)

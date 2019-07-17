@@ -12,7 +12,7 @@ static void ft_recalculate(t_param *param)
     param->time.old_time = param->time.time;
     param->time.time = SDL_GetTicks();
     param->time.fr_t = (param->time.time - param->time.old_time) / 1000.0;
-    param->time.mv_s = param->time.fr_t * 20.0;
+    param->time.mv_s = param->time.fr_t * 5.0;
     param->time.ro_s = param->time.fr_t * 3.0;
 }
 
@@ -28,15 +28,13 @@ int main(int argc, char **argv)
 		ft_readmap(param);
 		while (param->running)
 		{
+			param = ft_events(param);
 			ft_printmap(param);
 			ft_recalculate(param);
-			if (param->event.type == SDL_KEYDOWN) {
-				param->time = ft_hooks(param);
-				param->event.key.keysym.sym = 0;
-			}
+			param->time = ft_hooks(param);
+			param->event.key.keysym.sym = 0;
 			ft_exit(param);
 		}
-		printf("%i\n %i\n", param->width, param->height);
 	}
 	else
 		ft_error(1);

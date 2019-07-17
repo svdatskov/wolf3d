@@ -11,8 +11,8 @@ static t_param *first_stage(int fd, t_param *param)
 		while (param->line[param->width]) {
 			if (param->line[param->width] == 'x') {
 				player++;
-				param->pr->p_x = param->width;
-				param->pr->p_y = param->height;
+				param->pr->p_x = param->width + 0.5;
+				param->pr->p_y = param->height + 0.5;
 			}
 			param->width++;
 		}

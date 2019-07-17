@@ -2,6 +2,18 @@
 
 static void verLine(int x, int dr_s, int dr_e, int color, t_param *param)
 {
+	color = 1;
+	double wallX;
+	if (param->pr->side == 0)
+		wallX = param->pr->p_y + param->pr->pwd * param->pr->ray_y;
+	else
+		wallX = param->pr->p_x + param->pr->pwd * param->pr->ray_x;
+	wallX -= (int)((wallX));
+	int texX = (int)(wallX * (double)(64));
+	if(param->pr->side == 0 && param->pr->ray_x > 0)
+		texX = 64 - texX - 1;
+	if(param->pr->side == 1 && param->pr->ray_y < 0)
+		texX = 64 - texX - 1;
 	int y = 0;
 	while (y < dr_s)
 	{
@@ -11,7 +23,11 @@ static void verLine(int x, int dr_s, int dr_e, int color, t_param *param)
 	y = dr_s;
 	while (y <= dr_e)
 	{
-		param->data_img[y * WIDTH + x] = color;
+		int d = y * 256 - HEIGHT * 128 + param->pr->lineHeight * 128;
+		int texY = ((d * 64) / param->pr->lineHeight) / 256;
+		Uint32 col = param->img[64 * texY + texX];
+		if(param->pr->side == 1) col = (col >> 1) & 8355711;
+		param->data_img[y * WIDTH + x] = col;
 		y++;
 	}
 	y = dr_e + 1;
@@ -88,7 +104,6 @@ static void conditions3(t_param *p, int x)
 void	ft_printmap(t_param *p)
 {
 	int x = 0;
-		while(SDL_PollEvent(&p->event)) {
 			while (x < (double)WIDTH) {
 				conditions3(p, x);
 				conditions(p);
@@ -113,5 +128,4 @@ void	ft_printmap(t_param *p)
 				x++;
 			}
 	SDL_UpdateWindowSurface(p->window);
-		}
 }
