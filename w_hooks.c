@@ -38,5 +38,6 @@ t_time	ft_hooks(t_param *param)
 		param->pr->pl_x = param->pr->pl_x * cos(-param->time.ro_s) - param->pr->pl_y * sin(-param->time.ro_s);
 		param->pr->pl_y = param->pr->opl_x * sin(-param->time.ro_s) + param->pr->pl_y * cos(-param->time.ro_s);
 	}
+
 	return (param->time);
 }

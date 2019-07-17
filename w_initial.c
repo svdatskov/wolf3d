@@ -51,7 +51,7 @@ static void	ft_sdl_initial(t_param *param)
 	param->image[5] = IMG_Load("../pics/mossy.png");
 	param->image[6] = IMG_Load("../pics/wood.png");
 	param->image[7] = IMG_Load("../pics/colorstone.png");
-	param->img = param->image[0]->pixels;
+	param->img = param->image[1]->pixels;
 }
 
 t_param 	*ft_initial(void)
