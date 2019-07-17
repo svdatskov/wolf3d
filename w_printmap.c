@@ -1,19 +1,18 @@
 #include "wolf3d.h"
 
-static void verLine(int x, int dr_s, int dr_e, int color, t_param *param)
+static void verLine(int x, int dr_s, int dr_e, t_param *param)
 {
-	color = 1;
 	double wallX;
 	if (param->pr->side == 0)
 		wallX = param->pr->p_y + param->pr->pwd * param->pr->ray_y;
 	else
 		wallX = param->pr->p_x + param->pr->pwd * param->pr->ray_x;
 	wallX -= (int)((wallX));
-	int texX = (int)(wallX * (double)(64));
+	int texX = (int)(wallX * (double)(T_WIDTH));
 	if(param->pr->side == 0 && param->pr->ray_x > 0)
-		texX = 64 - texX - 1;
+		texX = T_WIDTH - texX - 1;
 	if(param->pr->side == 1 && param->pr->ray_y < 0)
-		texX = 64 - texX - 1;
+		texX = T_WIDTH - texX - 1;
 	int y = 0;
 	while (y < dr_s)
 	{
@@ -21,11 +20,11 @@ static void verLine(int x, int dr_s, int dr_e, int color, t_param *param)
 		y++;
 	}
 	y = dr_s;
-	while (y <= dr_e)
+	while (y < dr_e)
 	{
 		int d = y * 256 - HEIGHT * 128 + param->pr->lineHeight * 128;
-		int texY = ((d * 64) / param->pr->lineHeight) / 256;
-		Uint32 col = param->img[64 * texY + texX];
+		int texY = ((d * T_HEIGHT) / param->pr->lineHeight) / 256;
+		Uint32 col = param->img[T_HEIGHT * texY + texX];
 		if(param->pr->side == 1) col = (col >> 1) & 8355711;
 		param->data_img[y * WIDTH + x] = col;
 		y++;
@@ -113,7 +112,7 @@ void	ft_printmap(t_param *p)
 				p->pr->drE = p->pr->lineHeight / 2 + HEIGHT / 2;
 				if (p->pr->drE >= HEIGHT)
 					p->pr->drE = HEIGHT - 1;
-				int color = 0x00FF00;
+			//	int color = 0x00FF00;
 //				switch(p->map[mapX][mapY])
 //				{
 //					case 1:  color = 0xff0000;  break; //red
@@ -122,9 +121,9 @@ void	ft_printmap(t_param *p)
 //					case 4:  color = 0xffffff;  break; //white
 //					default: color = 0xff8000; break; //yellow
 //				}
-				if (p->pr->side == 1) { color = color / 2; }
+			//	if (p->pr->side == 1) { color = color / 2; }
 
-				verLine(x, p->pr->drS, p->pr->drE, color, p);
+				verLine(x, p->pr->drS, p->pr->drE, p);
 				x++;
 			}
 	SDL_UpdateWindowSurface(p->window);
