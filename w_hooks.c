@@ -1,46 +1,66 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   w_hooks.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sdatskov <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/07/18 20:12:10 by sdatskov          #+#    #+#             */
+/*   Updated: 2019/07/18 20:12:12 by sdatskov         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "wolf3d.h"
 
-t_time	ft_hooks(t_param *param)
+static void	hook_up(t_param *p)
 {
-	if (param->flags.up)
-	{
-		if (param->map[(int)(param->pr->p_y)][(int)(param->pr->p_x + param->pr->d_x * param->time.mv_s)] == '0' ||
-		param->map[(int)(param->pr->p_y)][(int)(param->pr->p_x + param->pr->d_x * param->time.mv_s)] == 'x')
-			param->pr->p_x += param->pr->d_x * param->time.mv_s;
-		if(param->map[(int)(param->pr->p_y + param->pr->d_y * param->time.mv_s)][(int)(param->pr->p_x)] == '0' ||
-		param->map[(int)(param->pr->p_y + param->pr->d_y * param->time.mv_s)][(int)(param->pr->p_x)] == 'x')
-			param->pr->p_y += param->pr->d_y * param->time.mv_s;
-	}
-	if (param->flags.down)
-	{
-		if (param->map[(int)(param->pr->p_y)][(int)(param->pr->p_x - param->pr->d_x * param->time.mv_s)] == '0' ||
-				param->map[(int)(param->pr->p_y)][(int)(param->pr->p_x - param->pr->d_x * param->time.mv_s)] == 'x')
-			param->pr->p_x -= param->pr->d_x * param->time.mv_s;
-		if(param->map[(int)(param->pr->p_y - param->pr->d_y * param->time.mv_s)][(int)(param->pr->p_x)] == '0'||
-		param->map[(int)(param->pr->p_y - param->pr->d_y * param->time.mv_s)][(int)(param->pr->p_x)] == 'x')
-			param->pr->p_y -= param->pr->d_y * param->time.mv_s;
-	}
-	if (param->flags.right)
-	{
-		param->pr->od_X = param->pr->d_x;
-		param->pr->d_x = param->pr->d_x * cos(param->time.ro_s) - param->pr->d_y * sin(param->time.ro_s);
-		param->pr->d_y = param->pr->od_X * sin(param->time.ro_s) + param->pr->d_y * cos(param->time.ro_s);
-		param->pr->opl_x = param->pr->pl_x;
-		param->pr->pl_x = param->pr->pl_x * cos(param->time.ro_s) - param->pr->pl_y * sin(param->time.ro_s);
-		param->pr->pl_y = param->pr->opl_x * sin(param->time.ro_s) + param->pr->pl_y * cos(param->time.ro_s);
-	}
-	if (param->flags.left)
-	{
-		param->pr->od_X = param->pr->d_x;
-		param->pr->d_x = param->pr->d_x * cos(-param->time.ro_s) - param->pr->d_y * sin(-param->time.ro_s);
-		param->pr->d_y = param->pr->od_X * sin(-param->time.ro_s) + param->pr->d_y * cos(-param->time.ro_s);
-		param->pr->opl_x = param->pr->pl_x;
-		param->pr->pl_x = param->pr->pl_x * cos(-param->time.ro_s) - param->pr->pl_y * sin(-param->time.ro_s);
-		param->pr->pl_y = param->pr->opl_x * sin(-param->time.ro_s) + param->pr->pl_y * cos(-param->time.ro_s);
-	}
-	if (param->flags.speed)
-	{
-		param->time.mv_s = param->time.fr_t * 10.0;
-	}
-	return (param->time);
+	if (p->map[(int)(PR->p_y)][(int)(PR->p_x + PR->d_x * TM.mv_s)] == '0' ||
+		p->map[(int)(PR->p_y)][(int)(PR->p_x + PR->d_x * TM.mv_s)] == 'x')
+		PR->p_x += PR->d_x * p->time.mv_s;
+	if (p->map[(int)(PR->p_y + PR->d_y * TM.mv_s)][(int)(PR->p_x)] == '0' ||
+		p->map[(int)(PR->p_y + PR->d_y * TM.mv_s)][(int)(PR->p_x)] == 'x')
+		PR->p_y += PR->d_y * TM.mv_s;
+}
+
+static void	hook_down(t_param *p)
+{
+	if (p->map[(int)(PR->p_y)][(int)(PR->p_x - PR->d_x * TM.mv_s)] == '0' ||
+		p->map[(int)(PR->p_y)][(int)(PR->p_x - PR->d_x * TM.mv_s)] == 'x')
+		PR->p_x -= PR->d_x * p->time.mv_s;
+	if (p->map[(int)(PR->p_y - PR->d_y * TM.mv_s)][(int)(PR->p_x)] == '0' ||
+		p->map[(int)(PR->p_y - PR->d_y * TM.mv_s)][(int)(PR->p_x)] == 'x')
+		PR->p_y -= PR->d_y * TM.mv_s;
+}
+
+static void	hook_right(t_param *p)
+{
+	PR->od_x = PR->d_x;
+	PR->d_x = PR->d_x * cos(TM.ro_s) - PR->d_y * sin(TM.ro_s);
+	PR->d_y = PR->od_x * sin(TM.ro_s) + PR->d_y * cos(TM.ro_s);
+	PR->opl_x = PR->pl_x;
+	PR->pl_x = PR->pl_x * cos(TM.ro_s) - PR->pl_y * sin(TM.ro_s);
+	PR->pl_y = PR->opl_x * sin(TM.ro_s) + PR->pl_y * cos(TM.ro_s);
+}
+
+static void	hook_left(t_param *p)
+{
+	PR->od_x = PR->d_x;
+	PR->d_x = PR->d_x * cos(-TM.ro_s) - PR->d_y * sin(-TM.ro_s);
+	PR->d_y = PR->od_x * sin(-TM.ro_s) + PR->d_y * cos(-TM.ro_s);
+	PR->opl_x = PR->pl_x;
+	PR->pl_x = PR->pl_x * cos(-TM.ro_s) - PR->pl_y * sin(-TM.ro_s);
+	PR->pl_y = PR->opl_x * sin(-TM.ro_s) + PR->pl_y * cos(-TM.ro_s);
+}
+
+t_time		ft_hooks(t_param *p)
+{
+	if (p->flags.up)
+		hook_up(p);
+	if (p->flags.down)
+		hook_down(p);
+	if (p->flags.right)
+		hook_right(p);
+	if (p->flags.left)
+		hook_left(p);
+	return (p->time);
 }

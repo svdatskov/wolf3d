@@ -12,7 +12,7 @@ static void ft_recalculate(t_param *param)
     param->time.old_time = param->time.time;
     param->time.time = SDL_GetTicks();
     param->time.fr_t = (param->time.time - param->time.old_time) / 1000.0;
-    param->time.mv_s = param->time.fr_t * 5.0;
+    param->time.mv_s = param->flags.speed == 0 ? param->time.fr_t * 5.0 : param->time.fr_t * 10.0;
     param->time.ro_s = param->time.fr_t * 3.0;
 }
 
